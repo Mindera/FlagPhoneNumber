@@ -25,6 +25,10 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
 		}
 	}
 
+
+    /// Color of the items on the picker view
+    public var pickerViewToolbarTintColor: UIColor?
+
 	/// The size of the leftView
 	private var leftViewSize: CGSize {
 		let width = flagSize.width + flagButtonEdgeInsets.left + flagButtonEdgeInsets.right + phoneCodeTextField.frame.width
@@ -172,14 +176,14 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
 	@objc private func displayNumberKeyBoard() {
 		inputView = nil
 		inputAccessoryView = textFieldInputAccessoryView
-		tintColor = .gray
+		tintColor = pickerViewToolbarTintColor ?? .gray
 		reloadInputViews()
 	}
 
 	@objc private func displayCountryKeyboard() {
 		inputView = countryPicker
 		inputAccessoryView = getToolBar(with: getCountryListBarButtonItems())
-		tintColor = .clear
+		tintColor = pickerViewToolbarTintColor ?? .clear
 		reloadInputViews()
 		becomeFirstResponder()
 	}
@@ -340,6 +344,9 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
 		let toolbar: UIToolbar = UIToolbar()
 
 		toolbar.barStyle = UIBarStyle.default
+        if let toolbarColor = pickerViewToolbarTintColor {
+            toolbar.tintColor = toolbarColor
+        }
 		toolbar.items = items
 		toolbar.sizeToFit()
 

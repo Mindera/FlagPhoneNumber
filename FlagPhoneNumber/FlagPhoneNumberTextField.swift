@@ -29,6 +29,9 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
     /// Color of the items on the picker view
     public var pickerViewToolbarTintColor: UIColor?
 
+    /// Title for *Done* button. If *nil* it will use the default one
+    public var pickerViewDoneTitle: String?
+
 	/// The size of the leftView
 	private var leftViewSize: CGSize {
 		let width = flagSize.width + flagButtonEdgeInsets.left + flagButtonEdgeInsets.right + phoneCodeTextField.frame.width
@@ -355,7 +358,12 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
 
 	private func getCountryListBarButtonItems() -> [UIBarButtonItem] {
 		let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resetKeyBoard))
+        var doneButton: UIBarButtonItem
+        if let doneTitle = pickerViewDoneTitle {
+            doneButton = UIBarButtonItem(title: doneTitle, style: .done, target: self, action: #selector(resetKeyBoard))
+        } else {
+            doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resetKeyBoard))
+        }
 
 		doneButton.accessibilityLabel = "doneButton"
 

@@ -26,7 +26,7 @@ open class FPNTextField: UITextField, FPNCountryPickerDelegate, FPNDelegate {
     private var formatter: NBAsYouTypeFormatter?
 
     public var flagView: UIImageView = UIImageView(image: UIImage(named: "AD"))
-    public var dropDownIcon: UIImageView = UIImageView(image: UIImage(named: "AD"))
+    public var dropDownIcon: UIImageView = UIImageView(image: UIImage(named: "dropDownArrow"))
 
     open override var font: UIFont? {
         didSet {

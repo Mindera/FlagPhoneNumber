@@ -2,14 +2,18 @@ import UIKit
 
 open class FPNCountryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
 
-	var countries: [FPNCountry]! {
+	public var countries: [FPNCountry]! {
 		didSet {
 			reloadAllComponents()
 		}
 	}
 
+    private var _selectedCountry: FPNCountry?
+    open var selectedCountry: FPNCountry? {
+        return _selectedCountry
+    }
 	open var selectedLocale: Locale?
-	weak var countryPickerDelegate: FPNCountryPickerDelegate?
+	open weak var countryPickerDelegate: FPNCountryPickerDelegate?
 	open var showPhoneNumbers: Bool = true
 
 	override init(frame: CGRect) {
@@ -88,6 +92,7 @@ open class FPNCountryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDat
 
 		if countries.count > 0 {
 			let country = countries[row]
+            _selectedCountry = country
 
 			countryPickerDelegate?.countryPhoneCodePicker(self, didSelectCountry: country)
 		}
@@ -144,7 +149,7 @@ open class FPNCountryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDat
 		return allCountries
 	}
 
-	private func getAllCountries(equalTo countryCodes: [FPNCountryCode]) -> [FPNCountry] {
+	open func getAllCountries(equalTo countryCodes: [FPNCountryCode]) -> [FPNCountry] {
 		let allCountries = getAllCountries()
 		var countries = [FPNCountry]()
 

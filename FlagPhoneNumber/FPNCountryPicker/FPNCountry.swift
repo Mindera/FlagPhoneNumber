@@ -6,7 +6,7 @@ public struct FPNCountry {
 	public var phoneCode: String
 	public var flag: UIImage?
 
-	init(code: String, name: String, phoneCode: String) {
+	public init(code: String, name: String, phoneCode: String) {
 		self.name = name
 		self.phoneCode = phoneCode
 		self.code = FPNCountryCode(rawValue: code)!

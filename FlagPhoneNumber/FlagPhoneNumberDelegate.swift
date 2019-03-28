@@ -8,6 +8,6 @@
 
 import Foundation
 
-internal protocol FPNDelegate {
+public protocol FPNDelegate: class {
 	func fpnDidSelect(country: FPNCountry)
 }

@@ -8,31 +8,31 @@
 
 import Foundation
 
-class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpdating, UISearchControllerDelegate {
+open class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpdating, UISearchControllerDelegate {
 
 	var searchController: UISearchController?
 	var list: [FPNCountry]?
 	var results: [FPNCountry]?
 
-	var delegate: FPNDelegate?
+	public weak var delegate: FPNDelegate?
 
-	init(countries: [FPNCountry]) {
+	public init(countries: [FPNCountry]) {
 		super.init(nibName: nil, bundle: nil)
 
 		self.list = countries
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+    override open func viewDidLoad() {
 		super.viewDidLoad()
 
 		initSearchBarController()
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if #available(iOS 11.0, *) {
@@ -42,7 +42,7 @@ class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpda
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		searchController?.isActive = true
@@ -88,11 +88,11 @@ class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpda
 		return array[indexPath.row]
 	}
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
+    override open func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if let searchController = searchController, searchController.isActive {
 			if let count = searchController.searchBar.text?.count, count > 0 {
 				return results?.count ?? 0
@@ -101,7 +101,7 @@ class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpda
 		return list?.count ?? 0
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
 		let country = getItem(at: indexPath)
 
@@ -112,7 +112,7 @@ class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpda
 		return cell
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 
 		delegate?.fpnDidSelect(country: getItem(at: indexPath))
@@ -123,7 +123,7 @@ class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpda
 
 	// UISearchResultsUpdating
 
-	func updateSearchResults(for searchController: UISearchController) {
+    public func updateSearchResults(for searchController: UISearchController) {
 		if list == nil {
 			results?.removeAll()
 			return

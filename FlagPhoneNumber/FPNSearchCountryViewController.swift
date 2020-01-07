@@ -150,17 +150,17 @@ open class FPNSearchCountryViewController: UITableViewController, UISearchResult
 
 	// UISearchControllerDelegate
 
-	func didPresentSearchController(_ searchController: UISearchController) {
+    public func didPresentSearchController(_ searchController: UISearchController) {
 		DispatchQueue.main.async { [unowned self] in
 			self.searchController?.searchBar.becomeFirstResponder()
 		}
 	}
 
-	func willDismissSearchController(_ searchController: UISearchController) {
+    public func willDismissSearchController(_ searchController: UISearchController) {
 		results?.removeAll()
 	}
 
-	func didDismissSearchController(_ searchController: UISearchController) {
+    public func didDismissSearchController(_ searchController: UISearchController) {
 		dismissController()
 	}
 }

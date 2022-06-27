@@ -6,7 +6,7 @@
 //  Copyright (c) 2017 Aurélien Grifasi. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public protocol FPNTextFieldDelegate: UITextFieldDelegate {
 	func fpnDidSelectCountry(name: String, dialCode: String, code: String)

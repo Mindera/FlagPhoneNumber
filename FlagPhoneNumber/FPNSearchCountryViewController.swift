@@ -6,7 +6,7 @@
 //  Copyright (c) 2017 Aurélien Grifasi. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 open class FPNSearchCountryViewController: UITableViewController, UISearchResultsUpdating, UISearchControllerDelegate {
 

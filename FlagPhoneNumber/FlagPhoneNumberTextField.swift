@@ -6,8 +6,13 @@
 //  Copyright (c) 2017 Aurélien Grifasi. All rights reserved.
 //
 
-import Foundation
+#if canImport(libPhoneNumber)
+import libPhoneNumber
+#elseif canImport(libPhoneNumber_iOS)
 import libPhoneNumber_iOS
+#endif
+
+import UIKit
 
 open class FPNTextField: UITextField {
 

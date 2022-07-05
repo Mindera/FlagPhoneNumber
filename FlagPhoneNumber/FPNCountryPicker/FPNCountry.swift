@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 public struct FPNCountry {
 	public var code: FPNCountryCode

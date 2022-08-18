@@ -101,20 +101,19 @@ open class FPNCountryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDat
 	// Populates the metadata from the included json file resource
 
 	private func getAllCountries() -> [FPNCountry] {
-		let bundle: Bundle = Bundle.FlagPhoneNumber()
-		let resource: String = "countryCodes"
-		let jsonPath = bundle.path(forResource: resource, ofType: "json")
-
-		assert(jsonPath != nil, "Resource file is not found in the Bundle")
-
-		let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath!))
-
-		assert(jsonPath != nil, "Resource file is not found")
+        // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
+        guard
+            let jsonPath = Bundle.module.url(forResource: "countryCodes", withExtension: "json"),
+            let jsonData = try? Data(contentsOf: jsonPath)
+        else {
+            assertionFailure("Resource file is not found in the Bundle")
+            return []
+        }
 
 		var countries = [FPNCountry]()
 
 		do {
-			if let jsonObjects = try JSONSerialization.jsonObject(with: jsonData!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSArray {
+			if let jsonObjects = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.allowFragments) as? NSArray {
 
 				for jsonObject in jsonObjects {
 					guard let countryObj = jsonObject as? NSDictionary else { return countries }

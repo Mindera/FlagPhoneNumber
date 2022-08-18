@@ -26,8 +26,7 @@ class NibLoadingView: UIView {
 	}
 
 	fileprivate func loadViewFromNib() -> UIView {
-		let bundle = Bundle.FlagPhoneNumber()
-		let nib = UINib(nibName: String(describing: type(of: self)), bundle: bundle)
+        let nib = UINib(nibName: String(describing: type(of: self)), bundle: Bundle.module)
 		let nibView = nib.instantiate(withOwner: self, options: nil).first as! UIView
 
 		return nibView

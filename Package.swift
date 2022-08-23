@@ -9,13 +9,13 @@
          .library(name: "FlagPhoneNumber", targets: ["FlagPhoneNumber"]),
      ],
      dependencies: [
-        .package(url: "https://github.com/Mindera/libPhoneNumber-iOS.git", exact: Version(1, 0, 3))
+        .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: Version(3, 4, 0))
      ],
      targets: [
          .target(
             name: "FlagPhoneNumber",
             dependencies: [
-                .product(name: "libPhoneNumber", package: "libPhoneNumber-iOS")
+                .product(name: "PhoneNumberKit", package: "PhoneNumberKit")
             ],
             resources: [
                 .process("Resources/countryCodes.json")

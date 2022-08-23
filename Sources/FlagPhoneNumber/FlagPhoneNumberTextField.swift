@@ -6,19 +6,13 @@
 //  Copyright (c) 2017 Aurélien Grifasi. All rights reserved.
 //
 
-#if canImport(libPhoneNumber)
-import libPhoneNumber
-#elseif canImport(libPhoneNumber_iOS)
-import libPhoneNumber_iOS
-#endif
-
+import PhoneNumberKit
 import UIKit
 
 open class FPNTextField: UITextField {
-
-    private lazy var phoneUtil: NBPhoneNumberUtil = NBPhoneNumberUtil()
-    private var nbPhoneNumber: NBPhoneNumber?
-    private var formatter: NBAsYouTypeFormatter?
+    
+    private lazy var phoneNumberKit = PhoneNumberKit()
+    private var phoneNumber: PhoneNumber?
 
     /// Present in the placeholder an example of a phone number according to the selected country code.
     /// If false, you can set your own placeholder. Set to true by default.
@@ -67,18 +61,17 @@ open class FPNTextField: UITextField {
     // - Public
 
     /// Get the current formatted phone number
-    public func getFormattedPhoneNumber(format: FPNFormat) -> String? {
-        return try? phoneUtil.format(nbPhoneNumber, numberFormat: convert(format: format))
+    public func getFormattedPhoneNumber(format: PhoneNumberFormat) -> String? {
+        guard let phoneNumber = phoneNumber else {
+            return nil
+        }
+
+        return phoneNumberKit.format(phoneNumber, toType: format)
     }
 
     /// Get the current raw phone number
     public func getRawPhoneNumber() -> String? {
-        let phoneNumber = getFormattedPhoneNumber(format: .E164)
-        var nationalNumber: NSString?
-
-        phoneUtil.extractCountryCode(phoneNumber, nationalNumber: &nationalNumber)
-
-        return nationalNumber as String?
+        phoneNumber?.adjustedNationalNumber()
     }
 
     /// Set directly the phone number. e.g "+33612345678"
@@ -86,10 +79,10 @@ open class FPNTextField: UITextField {
         let cleanedPhoneNumber: String = clean(string: phoneNumber)
 
         if let validPhoneNumber = getValidNumber(phoneNumber: cleanedPhoneNumber) {
-            if validPhoneNumber.italianLeadingZero {
-                text = "0\(validPhoneNumber.nationalNumber.stringValue)"
+            if validPhoneNumber.leadingZero {
+                text = "0\(validPhoneNumber.nationalNumber)"
             } else {
-                text = validPhoneNumber.nationalNumber.stringValue
+                text = "\(validPhoneNumber.nationalNumber)"
             }
         }
     }
@@ -98,7 +91,7 @@ open class FPNTextField: UITextField {
         let cleanedPhoneNumber: String = clean(string: phoneNumber)
 
         if let validPhoneNumber = getValidNumber(phoneNumber: cleanedPhoneNumber) {
-            return validPhoneNumber.countryCode.stringValue
+            return "\(validPhoneNumber.countryCode)"
         }
 
         return nil
@@ -108,48 +101,21 @@ open class FPNTextField: UITextField {
 
     @objc private func didEditText() {
         if let phoneCode = selectedCountry?.phoneCode, let number = text {
-            var cleanedPhoneNumber = clean(string: "\(phoneCode) \(number)")
+            let cleanedPhoneNumber = clean(string: "\(phoneCode) \(number)")
 
             if let validPhoneNumber = getValidNumber(phoneNumber: cleanedPhoneNumber) {
-                nbPhoneNumber = validPhoneNumber
+                phoneNumber = validPhoneNumber
 
-                cleanedPhoneNumber = "+\(validPhoneNumber.countryCode.stringValue)\(validPhoneNumber.nationalNumber.stringValue)"
-
-                if let inputString = formatter?.inputString(cleanedPhoneNumber) {
-                    text = remove(dialCode: phoneCode, in: inputString)
-                }
                 (delegate as? FPNTextFieldDelegate)?.fpnDidValidatePhoneNumber(textField: self, isValid: true)
             } else {
-                nbPhoneNumber = nil
+                phoneNumber = nil
 
-                if let dialCode = selectedCountry?.phoneCode {
-                    if let inputString = formatter?.inputString(cleanedPhoneNumber) {
-                        text = remove(dialCode: dialCode, in: inputString)
-                    }
-                }
                 (delegate as? FPNTextFieldDelegate)?.fpnDidValidatePhoneNumber(textField: self, isValid: false)
             }
         }
     }
 
-    private func convert(format: FPNFormat) -> NBEPhoneNumberFormat {
-        switch format {
-        case .E164:
-            return NBEPhoneNumberFormat.E164
-        case .International:
-            return NBEPhoneNumberFormat.INTERNATIONAL
-        case .National:
-            return NBEPhoneNumberFormat.NATIONAL
-        case .RFC3966:
-            return NBEPhoneNumberFormat.RFC3966
-        }
-    }
-
     private func updateUI() {
-        if let countryCode = selectedCountry?.code {
-            formatter = NBAsYouTypeFormatter(regionCode: countryCode.rawValue)
-        }
-
         setNeedsLayout()
         layoutIfNeeded()
 
@@ -167,12 +133,12 @@ open class FPNTextField: UITextField {
         return string.components(separatedBy: allowedCharactersSet.inverted).joined(separator: "")
     }
 
-    private func getValidNumber(phoneNumber: String) -> NBPhoneNumber? {
+    private func getValidNumber(phoneNumber: String) -> PhoneNumber? {
         guard let countryCode = selectedCountry?.code else { return nil }
 
         do {
-            let parsedPhoneNumber: NBPhoneNumber = try phoneUtil.parse(phoneNumber, defaultRegion: countryCode.rawValue)
-            let isValid = phoneUtil.isValidNumber(parsedPhoneNumber)
+            let parsedPhoneNumber: PhoneNumber = try phoneNumberKit.parse(phoneNumber, withRegion: countryCode.rawValue)
+            let isValid = phoneNumberKit.isValidPhoneNumber(parsedPhoneNumber.numberString)
 
             return isValid ? parsedPhoneNumber : nil
         } catch _ {
@@ -185,19 +151,9 @@ open class FPNTextField: UITextField {
     }
 
     private func updatePlaceholder() {
-        if let countryCode = selectedCountry?.code {
-            do {
-                let example = try phoneUtil.getExampleNumber(countryCode.rawValue)
-                let phoneNumber = "+\(example.countryCode.stringValue)\(example.nationalNumber.stringValue)"
-
-                if let inputString = formatter?.inputString(phoneNumber) {
-                    placeholder = remove(dialCode: "+\(example.countryCode.stringValue)", in: inputString)
-                } else {
-                    placeholder = nil
-                }
-            } catch _ {
-                placeholder = nil
-            }
+        if let countryCode = selectedCountry?.code,
+        let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
+            placeholder = phoneNumberKit.format(example, toType: .national)
         } else {
             placeholder = nil
         }

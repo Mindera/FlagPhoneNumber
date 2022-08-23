@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'FlagPhoneNumber'
-s.version          = '0.7.2'
+s.version          = '1.0.0'
 s.summary          = 'A formatted phone number UITextField with country flag picker.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ s.summary          = 'A formatted phone number UITextField with country flag pic
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
 s.description      = <<-DESC
-FlagPhoneNumber is a phone number textfield that allows you to choose the country code thanks to a picker. It uses libPhoneNumber to format the number in the textfield according to country code.
+FlagPhoneNumber is a phone number textfield that allows you to choose the country code thanks to a picker. Mindera's fork of this library uses PhoneNumberKit to format the number in the textfield according to country code.
 DESC
 
 s.homepage         = 'https://github.com/chronotruck/FlagPhoneNumber'
@@ -28,19 +28,19 @@ s.author           = { 'Aurélien Grifasi' => 'aurelien.grifasi@chronotruck.com'
 s.source           = { :git => 'https://github.com/chronotruck/FlagPhoneNumber.git', :tag => s.version.to_s }
 # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-s.ios.deployment_target = '8.0'
+s.ios.deployment_target = '9.0'
 
-s.source_files = 'FlagPhoneNumber/**/*.swift'
-s.resource_bundles = {'FlagPhoneNumber' => ['FlagPhoneNumber/Resources/**/*']}
+s.source_files = 'Sources/FlagPhoneNumber/**/*.swift'
+s.resource_bundles = {'FlagPhoneNumber' => ['Sources/FlagPhoneNumber/Resources/**/*']}
 
 #s.resource_bundles = {
-#'FlagPhoneNumber' => ['FlagPhoneNumber/Assets/*']
+#'FlagPhoneNumber' => ['Sources/FlagPhoneNumber/Assets/*']
 #}
 
 # s.public_header_files = 'Pod/Classes/**/*.h'
 # s.frameworks = 'UIKit', 'MapKit'
 
-s.dependency 'libPhoneNumber-iOS'
+s.dependency 'PhoneNumberKit'
 #s.xcconfig = { 'SWIFT_VERSION' => '4.0' }
 
 end

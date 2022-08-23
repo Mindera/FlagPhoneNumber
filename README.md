@@ -150,6 +150,7 @@ phoneNumberTextField.setCountries(excluding: [.AM, .BW, .BA])
 ## ☕️ Conception
 This library is high inspired of MRCountryPicker library and use libPhoneNumber-iOS library.
 https://github.com/xtrinch/MRCountryPicker / https://github.com/iziz/libPhoneNumber-iOS
+NOTE: Mindera's fork of this library has removed the usage of libPhoneNumber-iOS and replaced it with PhoneNumberKit, a newer library, also inspired by the original libPhoneNumber. This allows us to use this Lib with Swift Package Manager without the issues that were cropping up by using libPhoneNumber-iOS. 
 
 Open source time proudly sponsored by Chronotruck.
 

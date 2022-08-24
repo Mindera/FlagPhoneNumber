@@ -10,9 +10,25 @@ import PhoneNumberKit
 import UIKit
 
 open class FPNTextField: UITextField {
-    
+
     private lazy var phoneNumberKit = PhoneNumberKit()
+    private lazy var partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+
     private var phoneNumber: PhoneNumber?
+
+    open override var text: String? {
+        set {
+            if let newValue = newValue {
+                let formattedNumber = partialFormatter.formatPartial(newValue)
+                super.text = formattedNumber
+            } else {
+                super.text = newValue
+            }
+        }
+        get {
+            return super.text
+        }
+    }
 
     /// Present in the placeholder an example of a phone number according to the selected country code.
     /// If false, you can set your own placeholder. Set to true by default.
@@ -146,16 +162,16 @@ open class FPNTextField: UITextField {
         }
     }
 
-    private func remove(dialCode: String, in phoneNumber: String) -> String {
-        return phoneNumber.replacingOccurrences(of: "\(dialCode) ", with: "").replacingOccurrences(of: "\(dialCode)", with: "")
-    }
-
     private func updatePlaceholder() {
-        if let countryCode = selectedCountry?.code,
-        let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
-            placeholder = phoneNumberKit.format(example, toType: .national)
-        } else {
-            placeholder = nil
+        if let countryCode = selectedCountry?.code {
+            partialFormatter.defaultRegion = countryCode.rawValue
+            text = text
+
+            if let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
+                placeholder = phoneNumberKit.format(example, toType: .national)
+            } else {
+                placeholder = nil
+            }
         }
     }
 }

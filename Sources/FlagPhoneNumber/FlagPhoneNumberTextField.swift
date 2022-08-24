@@ -163,11 +163,15 @@ open class FPNTextField: UITextField {
     }
 
     private func updatePlaceholder() {
-        if let countryCode = selectedCountry?.code,
-        let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
-            placeholder = phoneNumberKit.format(example, toType: .national)
-        } else {
-            placeholder = nil
+        if let countryCode = selectedCountry?.code {
+            partialFormatter.defaultRegion = countryCode.rawValue
+            text = text
+
+            if let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
+                placeholder = phoneNumberKit.format(example, toType: .national)
+            } else {
+                placeholder = nil
+            }
         }
     }
 }

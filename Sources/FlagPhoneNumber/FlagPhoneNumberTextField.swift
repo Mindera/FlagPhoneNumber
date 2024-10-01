@@ -11,8 +11,8 @@ import UIKit
 
 open class FPNTextField: UITextField {
 
-    private lazy var phoneNumberKit = PhoneNumberKit()
-    private lazy var partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+    private lazy var phoneNumberUtility = PhoneNumberUtility()
+    private lazy var partialFormatter = PartialFormatter(utility: phoneNumberUtility)
 
     private var phoneNumber: PhoneNumber?
 
@@ -82,7 +82,7 @@ open class FPNTextField: UITextField {
             return nil
         }
 
-        return phoneNumberKit.format(phoneNumber, toType: format)
+        return phoneNumberUtility.format(phoneNumber, toType: format)
     }
 
     /// Get the current raw phone number
@@ -153,8 +153,8 @@ open class FPNTextField: UITextField {
         guard let countryCode = selectedCountry?.code else { return nil }
 
         do {
-            let parsedPhoneNumber: PhoneNumber = try phoneNumberKit.parse(phoneNumber, withRegion: countryCode.rawValue)
-            let isValid = phoneNumberKit.isValidPhoneNumber(parsedPhoneNumber.numberString)
+            let parsedPhoneNumber: PhoneNumber = try phoneNumberUtility.parse(phoneNumber, withRegion: countryCode.rawValue)
+            let isValid = phoneNumberUtility.isValidPhoneNumber(parsedPhoneNumber.numberString)
 
             return isValid ? parsedPhoneNumber : nil
         } catch _ {
@@ -167,8 +167,8 @@ open class FPNTextField: UITextField {
             partialFormatter.defaultRegion = countryCode.rawValue
             text = text
 
-            if let example = phoneNumberKit.getExampleNumber(forCountry: countryCode.rawValue) {
-                placeholder = phoneNumberKit.format(example, toType: .national)
+            if let example = phoneNumberUtility.getExampleNumber(forCountry: countryCode.rawValue) {
+                placeholder = phoneNumberUtility.format(example, toType: .national)
             } else {
                 placeholder = nil
             }
